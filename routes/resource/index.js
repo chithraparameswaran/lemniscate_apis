@@ -9,6 +9,7 @@ router.get('/', function(req,res){
     });
 })
 
+// test function for Google Natural Language API - successful
 router.get('/analyze',async function(req, res){
     var dataSet = [
         {id:1, value : "Very Best camera and chat app🔥👍👍"},
@@ -30,10 +31,34 @@ router.get('/analyze',async function(req, res){
 
 })
 
+
+router.post('/analyze', upload.single('file'), async function(req, res){
+    await parseCsv(req);
+    res.send(reviewInsights);
+
+})
+
 router.get('/search',function(req, res){
-    console.log(req.params.tagName)
-    var documentList = pouchmethods.retrieveTags(req.params.tagName);
+    var documentList = pouchmethods.retrieveTags(req.query.tagName);
     res.send(documentList);
 
 })
+
+// Async function to analyze syntax for csv files
+var parseCsv = async(req) => {
+    await fs.createReadStream(req.file.path)
+        .pipe(csvParser())
+        .on('data', function(csvrow) {
+            console.log(csvrow);
+            methods.resourcemethods.analyzeSyntax(csvrow).then((result) => {
+                pouchmethods.addDocument({"_id":csvrow.id,"insights":result});
+                reviewInsight.push(result)
+            }).catch((err)=> console.log(err))       
+        })
+        .on('end',function() {
+          //do something with csvData
+        //   console.log(csvData);
+        });
+}
+
 module.exports = router;
