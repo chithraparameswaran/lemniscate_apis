@@ -6,5 +6,5 @@ What this repository does
  3. Easy search and retrieval using local NOSQL database
 
 When was this created?
-  The final(local) code was created for Nanogiants Hack_The_Insights hackathon and hasn't been modified since. 
+  The final(local) code was created for Nanogiants Hack_The_Insights hackathon and local code hasn't been modified since. Only git repo updated to reflect local
   
